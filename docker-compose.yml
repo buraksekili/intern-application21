@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:  
+  flaskservice:
+    build: ./flask
+    restart: always
+    container_name: flaskservice
+    volumes:
+      - ./flask:/code
+    ports: 
+      - 4444:5000
+    networks: 
+      - servernet
+
+  nodeservice:
+    build: ./nodejs
+    volumes:
+      - ./nodejs:/code
+    container_name: nodeservice 
+    restart: always
+    command: npm start
+    ports: 
+      - 5555:3000
+    networks: 
+      - servernet
+
+  haproxy:
+    build: ./haproxy
+    restart: always
+    volumes:
+      - ./haproxy:/usr/local/etc/haproxy
+    ports:
+      - "8888:80"
+    networks: 
+      - servernet
+    depends_on: 
+      - flaskservice
+      - nodeservice
+
+
+networks:
+  servernet:
+    driver: bridge
