@@ -1,5 +1,4 @@
-FROM node:14-alpine 
-
+FROM node:15.11.0-alpine3.13
 RUN mkdir /code
 WORKDIR /code
 COPY . ./code
